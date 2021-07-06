@@ -73,6 +73,13 @@ git commit -m "Updated by deployment script $(date)"
 git push
 
 if [[ $DEPLOY_AKS == "true" ]]; then
+  status=$(az feature list -o tsv --query "[?contains(name, 'Microsoft.ContainerService/CustomNodeConfigPreview')].{State:properties.state}")
+  if [[ "$status" != "Registered" ]]; then
+    echo "ERROR! CustomNodeConfigPreview is not registered, status is '$status'"
+    echo "Please follow these stesp: https://docs.microsoft.com/en-us/azure/aks/custom-node-configuration#register-the-customnodeconfigpreview-preview-feature"
+    exit 1
+  fi
+  
   echo -e "\e[36m###\e[33m 🌐 Deploying AKS cluster & Azure resources, please wait this can take some time\e[39m"
   az deployment sub create -f ${scriptPath}/template/main.bicep -l $AZURE_REGION -n $AZURE_DEPLOY_NAME --parameters resGroupName=$AZURE_RESGRP location=$AZURE_REGION
 fi
