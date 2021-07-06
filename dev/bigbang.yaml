@@ -10,7 +10,7 @@ metadata:
   namespace: bigbang
 spec:
   interval: 1m
-  url: https://github.com/benc-uk/bigbang-azure.git
+  url: https://github.com/pauldfoster/bigbang-azure.git
   ref:
     branch: azure
   secretRef:
